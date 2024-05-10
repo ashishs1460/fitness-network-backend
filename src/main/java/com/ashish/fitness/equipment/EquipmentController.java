@@ -1,12 +1,15 @@
 package com.ashish.fitness.equipment;
 
 import com.ashish.fitness.common.PageResponse;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("equipments")
@@ -98,6 +101,24 @@ public class EquipmentController {
         return ResponseEntity.ok(equipmentService.returnBorrowedBook(equipmentId,connectedUser));
     }
 
+    @PatchMapping("/borrowed/returned/approve/{equipment-id")
+    public ResponseEntity<Integer> approveReturnBorrowedEquipment(
+            @PathVariable("equipment-id") Integer equipmentId,
+            Authentication connectedUser
+    ){
+        return ResponseEntity.ok(equipmentService.approveReturnBorrowedBook(equipmentId,connectedUser));
+    }
+
+    @PostMapping(value = "/image/{equipment-id}",consumes = "multipart/form-data")
+    public ResponseEntity<?> uploadEquipmentImage(
+            @PathVariable("equipment-id") Integer equipmentId,
+            @Parameter()
+            @RequestPart("file") MultipartFile file,
+            Authentication connectedUser
+    ){
+        equipmentService.uploadEquipmentImage(file,connectedUser,equipmentId);
+        return  ResponseEntity.accepted().build();
+    }
 
 
 

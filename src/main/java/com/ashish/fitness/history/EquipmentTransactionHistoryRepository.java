@@ -46,4 +46,16 @@ public interface EquipmentTransactionHistoryRepository extends JpaRepository<Equ
             """
     )
     Optional< EquipmentTransactionHistory> findByEquipmentIdAndUserId(Integer equipmentId, Integer userId);
+
+    @Query(
+            """
+            SELECT transaction
+            FROM EquipmentTransactionHistory transaction
+            WHERE transaction.equipment.owner.id = :userId
+            AND transaction.equipment.id = :equipmentId
+            AND transaction.returned = true
+            AND transaction.returnApproved = false 
+            """
+    )
+    Optional<EquipmentTransactionHistory> findByEquipmentIdAndOwnerId(Integer equipmentId, Integer id);
 }

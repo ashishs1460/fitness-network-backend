@@ -2,6 +2,7 @@ package com.ashish.fitness.equipment;
 
 import com.ashish.fitness.common.PageResponse;
 import com.ashish.fitness.exception.OperationNotPermittedException;
+import com.ashish.fitness.file.FileStorageService;
 import com.ashish.fitness.history.EquipmentTransactionHistory;
 import com.ashish.fitness.history.EquipmentTransactionHistoryRepository;
 import com.ashish.fitness.user.User;
@@ -13,10 +14,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Service
 public class EquipmentServiceImp implements EquipmentService{
@@ -26,6 +27,8 @@ public class EquipmentServiceImp implements EquipmentService{
     private EquipmentRepository equipmentRepository;
     @Autowired
     private EquipmentTransactionHistoryRepository historyRepository;
+    @Autowired
+    private FileStorageService fileStorageService;
     @Override
     public Integer save(EquipmentRequest request, Authentication connectedUser) {
         User user = ((User) connectedUser.getPrincipal());
@@ -184,5 +187,32 @@ public class EquipmentServiceImp implements EquipmentService{
         equipmentTransactionHistory.setReturned(true);
 
         return historyRepository.save(equipmentTransactionHistory).getId();
+    }
+
+    @Override
+    public Integer approveReturnBorrowedBook(Integer equipmentId, Authentication connectedUser) {
+        Equipment equipment = equipmentRepository.findById(equipmentId)
+                .orElseThrow(()-> new EntityNotFoundException("No equipment found with Id :: "+equipmentId));
+        if(equipment.isArchived() || !equipment.isSharable()){
+            throw  new OperationNotPermittedException("The requested equipment is cannot be borrowed since it is archived or not shareable");
+        }
+        User user = ((User) connectedUser.getPrincipal());
+        if(Objects.equals(equipment.getOwner().getEquipments(),user.getId())){
+            throw new OperationNotPermittedException("You can't borrow or return your own equipments");
+        }
+        EquipmentTransactionHistory equipmentTransactionHistory = historyRepository.findByEquipmentIdAndOwnerId(equipmentId,user.getId())
+                .orElseThrow(()-> new OperationNotPermittedException("You equipment is not returned yet! so you can't approve it's return"));
+        equipmentTransactionHistory.setReturnApproved(true);
+        return historyRepository.save(equipmentTransactionHistory).getId();
+    }
+
+    @Override
+    public void uploadEquipmentImage(MultipartFile file, Authentication connectedUser, Integer equipmentId) {
+        Equipment equipment = equipmentRepository.findById(equipmentId)
+                .orElseThrow(()-> new EntityNotFoundException("No equipment found with Id :: "+equipmentId));
+        User user = ((User) connectedUser.getPrincipal());
+        var equipmentImage = fileStorageService.saveFile(file,user.getId());
+        equipment.setImage(equipmentImage);
+        equipmentRepository.save(equipment);
     }
 }

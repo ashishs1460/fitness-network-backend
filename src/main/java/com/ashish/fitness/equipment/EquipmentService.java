@@ -2,6 +2,7 @@ package com.ashish.fitness.equipment;
 
 import com.ashish.fitness.common.PageResponse;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface EquipmentService {
     Integer save(EquipmentRequest request, Authentication connectedUser);
@@ -23,4 +24,8 @@ public interface EquipmentService {
     Integer borrowEquipment(Integer equipmentId, Authentication connectedUser);
 
     Integer returnBorrowedBook(Integer equipmentId, Authentication connectedUser);
+
+    Integer approveReturnBorrowedBook(Integer equipmentId, Authentication connectedUser);
+
+    void uploadEquipmentImage(MultipartFile file, Authentication connectedUser, Integer equipmentId);
 }
