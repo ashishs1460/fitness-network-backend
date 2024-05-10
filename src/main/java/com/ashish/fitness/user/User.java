@@ -1,6 +1,8 @@
 package com.ashish.fitness.user;
 
 
+import com.ashish.fitness.equipment.Equipment;
+import com.ashish.fitness.history.EquipmentTransactionHistory;
 import com.ashish.fitness.role.Role;
 import jakarta.persistence.*;
 import lombok.*;
@@ -46,6 +48,11 @@ public class User implements UserDetails, Principal {
     private LocalDateTime lastModifiedDate;
     @ManyToMany(fetch =FetchType.EAGER)
     private List<Role> roles;
+    @OneToMany(mappedBy = "owner")
+    private List<Equipment> equipments;
+
+    @OneToMany(mappedBy = "user")
+    private List<EquipmentTransactionHistory> histories;
 
 
     @Override
