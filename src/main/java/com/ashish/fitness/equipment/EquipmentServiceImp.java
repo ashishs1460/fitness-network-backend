@@ -85,7 +85,7 @@ public class EquipmentServiceImp implements EquipmentService{
     @Override
     public PageResponse<BorrowedEquipmentResponse> findAllBorrowedEquipments(int page, int size, Authentication connectedUser) {
         User user = ((User) connectedUser.getPrincipal());
-        Pageable  pageable = PageRequest.of(page,size, Sort.by("createdDate").descending());
+        Pageable pageable = PageRequest.of(page,size, Sort.by("createdDate").descending());
         Page<EquipmentTransactionHistory> allBorrowedEquipments = historyRepository.findAllBorrowedBooks(pageable,user.getId());
         List<BorrowedEquipmentResponse>  equipmentResponse = allBorrowedEquipments.stream()
                 .map(equipmentMapper::toBorrowedEquipmentResponse)

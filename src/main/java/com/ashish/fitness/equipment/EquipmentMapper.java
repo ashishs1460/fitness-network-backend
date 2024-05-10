@@ -1,5 +1,6 @@
 package com.ashish.fitness.equipment;
 
+import com.ashish.fitness.file.FileUtils;
 import com.ashish.fitness.history.EquipmentTransactionHistory;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +27,7 @@ public class EquipmentMapper {
                 .archived(equipment.isArchived())
                 .sharable(equipment.isSharable())
                 .owner(equipment.getOwner().fullName())
+                .image(FileUtils.readFileFromLocation(equipment.getImage()))
                 .build();
     }
 
