@@ -93,7 +93,7 @@ public class EquipmentController {
         return ResponseEntity.ok(equipmentService.borrowEquipment(equipmentId,connectedUser));
     }
 
-    @PatchMapping("/borrowed/returned/{equipment-id")
+    @PatchMapping("/borrowed/returned/{equipment-id}")
     public ResponseEntity<Integer> returnBorrowedEquipment(
             @PathVariable("equipment-id") Integer equipmentId,
             Authentication connectedUser
@@ -101,7 +101,7 @@ public class EquipmentController {
         return ResponseEntity.ok(equipmentService.returnBorrowedBook(equipmentId,connectedUser));
     }
 
-    @PatchMapping("/borrowed/returned/approve/{equipment-id")
+    @PatchMapping("/borrowed/returned/approve/{equipment-id}")
     public ResponseEntity<Integer> approveReturnBorrowedEquipment(
             @PathVariable("equipment-id") Integer equipmentId,
             Authentication connectedUser

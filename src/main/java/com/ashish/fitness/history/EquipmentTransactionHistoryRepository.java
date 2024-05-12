@@ -57,5 +57,5 @@ public interface EquipmentTransactionHistoryRepository extends JpaRepository<Equ
             AND transaction.returnApproved = false 
             """
     )
-    Optional<EquipmentTransactionHistory> findByEquipmentIdAndOwnerId(Integer equipmentId, Integer id);
+    Optional<EquipmentTransactionHistory> findByEquipmentIdAndOwnerId(Integer equipmentId, Integer userId);
 }

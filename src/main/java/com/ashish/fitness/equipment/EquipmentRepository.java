@@ -13,7 +13,7 @@ public interface EquipmentRepository extends JpaRepository<Equipment,Integer> , 
             SELECT equipment
             FROM Equipment equipment
             WHERE equipment.archived = false
-            AND equipment.shareable = true
+            AND equipment.sharable = true
             AND equipment.owner.id != :userId
             """)
     Page<Equipment> findAllDisplayableEquipments(Pageable pageable,Integer userId);
