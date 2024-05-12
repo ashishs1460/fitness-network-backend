@@ -78,6 +78,7 @@ public class AuthenticationServiceImp implements AuthenticationService{
         var jwtToken = jwtService.generateToken(claims, (User) auth.getPrincipal());
         return AuthenticationResponse.builder()
                 .token(jwtToken)
+                .fullName(user.fullName())
                 .build();
     }
 
