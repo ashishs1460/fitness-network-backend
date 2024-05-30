@@ -130,12 +130,12 @@ public class AuthenticationServiceImp implements AuthenticationService{
         emailService.sendEmail(
                 user.getEmail(),
                 user.fullName(),
-                EmailTemplateName.ACTIVATE_ACCOUNT,
-                activationUrl,
+                "https://fitness-social-service.vercel.app/activate-account",
                 newToken,
-                "Account activation"
+                "Account Activation"
         );
     }
+
 
     private String generateAndSaveActivationToken(User user) {
         // Generate a token

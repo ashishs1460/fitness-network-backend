@@ -7,61 +7,48 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import org.thymeleaf.context.Context;
-import org.thymeleaf.spring6.SpringTemplateEngine;
 
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.Map;
-
-import static java.nio.charset.StandardCharsets.*;
-import static org.springframework.mail.javamail.MimeMessageHelper.*;
 
 @Service
 public class EmailService {
     @Autowired
     private JavaMailSender mailSender;
-    @Autowired
-    private SpringTemplateEngine templateEngine;
 
     @Async
     public void sendEmail(
             String to,
             String username,
-            EmailTemplateName emailTemplate,
             String confirmationUrl,
             String activationCode,
             String subject
     ) throws MessagingException {
-        String templateName;
-        if (emailTemplate == null) {
-            templateName = "confirm-email";
-        } else {
-            templateName = emailTemplate.name();
-        }
+        // Build the email content
+        String content = buildEmailContent(username, confirmationUrl, activationCode);
+
+        // Create a MIME message
         MimeMessage mimeMessage = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(
                 mimeMessage,
-                MULTIPART_MODE_MIXED,
-                UTF_8.name()
+                MimeMessageHelper.MULTIPART_MODE_MIXED,
+                StandardCharsets.UTF_8.name()
         );
-        Map<String, Object> properties = new HashMap<>();
-        properties.put("username", username);
-        properties.put("confirmationUrl", confirmationUrl);
-        properties.put("activation_code", activationCode);
 
-        Context context = new Context();
-        context.setVariables(properties);
-
+        // Set email attributes
         helper.setFrom("onemorerep24x7@gmail.com");
         helper.setTo(to);
         helper.setSubject(subject);
+        helper.setText(content, true);
 
-        String template = templateEngine.process(templateName, context);
-
-        helper.setText(template, true);
-
+        // Send the email
         mailSender.send(mimeMessage);
     }
 
+    private String buildEmailContent(String username, String confirmationUrl, String activationCode) {
+        return "<p>Dear " + username + ",</p>"
+                + "<p>Thank you for registering. Please click the link below to activate your account:</p>"
+                + "<a href=\"" + confirmationUrl + "?token=" + activationCode + "\">Activate Account</a>"
+                + "<p>If you did not request this, please ignore this email.</p>"
+                + "<p>Best regards,<br/>Your Company</p>";
+    }
 }
