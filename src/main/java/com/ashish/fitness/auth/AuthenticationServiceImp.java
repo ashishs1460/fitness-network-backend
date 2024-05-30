@@ -147,7 +147,7 @@ public class AuthenticationServiceImp implements AuthenticationService{
                 .user(user)
                 .build();
         tokenRepository.save(token);
-        System.out.println("Generated code for the user : "+token);
+
         return generatedToken;
     }
 
@@ -161,6 +161,7 @@ public class AuthenticationServiceImp implements AuthenticationService{
             int randomIndex = secureRandom.nextInt(characters.length());
             codeBuilder.append(characters.charAt(randomIndex));
         }
+        System.out.println("Activation code : "+secureRandom.toString());
 
         return codeBuilder.toString();
     }
