@@ -13,6 +13,13 @@ spring:
         format_sql: true
     database: mysql
     database-platform: org.hibernate.dialect.MySQLDialect
+  spring:
+    thymeleaf:
+      prefix: classpath:/templates/
+      suffix: .html
+      mode: HTML
+      encoding: UTF-8
+      cache: false
   mail:
     host: smtp.gmail.com
     username: onemorerep24x7@gmail.com
