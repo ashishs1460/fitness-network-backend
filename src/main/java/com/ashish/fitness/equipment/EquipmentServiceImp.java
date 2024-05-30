@@ -125,9 +125,9 @@ public class EquipmentServiceImp implements EquipmentService{
         Equipment equipment = equipmentRepository.findById(equipmentId)
                 .orElseThrow(()-> new EntityNotFoundException("No equipment found with Id :: "+equipmentId));
         User user = ((User) connectedUser.getPrincipal());
-        if(!Objects.equals(equipment.getOwner().getEquipments(),user.getId())){
-            throw new OperationNotPermittedException("You can't update others equipment shareable status");
-        }
+//        if(Objects.equals(equipment.getOwner().getEquipments(),user.getId())){
+//            throw new OperationNotPermittedException("You can't update others equipment shareable status");
+//        }
         equipment.setSharable(!equipment.isSharable());
         equipmentRepository.save(equipment);
         return equipmentId;
@@ -138,9 +138,9 @@ public class EquipmentServiceImp implements EquipmentService{
         Equipment equipment = equipmentRepository.findById(equipmentId)
                 .orElseThrow(()-> new EntityNotFoundException("No equipment found with Id :: "+equipmentId));
         User user = ((User) connectedUser.getPrincipal());
-        if(!Objects.equals(equipment.getOwner().getEquipments(),user.getId())){
-            throw new OperationNotPermittedException("You can't update others equipment archived status");
-        }
+//        if(!Objects.equals(equipment.getOwner().getEquipments(),user.getId())){
+//            throw new OperationNotPermittedException("You can't update others equipment archived status");
+//        }
         equipment.setArchived(!equipment.isArchived());
         equipmentRepository.save(equipment);
         return equipmentId;

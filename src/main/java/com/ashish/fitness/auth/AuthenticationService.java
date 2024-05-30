@@ -8,4 +8,8 @@ public interface AuthenticationService {
     AuthenticationResponse authenticate(AuthenticationRequest request);
 
     void activateAccount(String token) throws MessagingException;
+
+    boolean verifyUser(String email);
+
+    String resetPassword(ResetPasswordRequest request);
 }

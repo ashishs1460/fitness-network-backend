@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.parameters.P;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,7 @@ import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AuthenticationServiceImp implements AuthenticationService{
@@ -100,6 +102,29 @@ public class AuthenticationServiceImp implements AuthenticationService{
         tokenRepository.save(savedToken);
     }
 
+    @Override
+    public boolean verifyUser(String email) {
+        Optional<User> optionalUser = userRepository.findByEmail(email);
+        if(optionalUser.isPresent()){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    @Override
+    public String resetPassword(ResetPasswordRequest request) {
+        Optional<User> optionalUser = userRepository.findByEmail(request.getEmail());
+        if(optionalUser.isPresent()){
+            User user = optionalUser.get();
+            user.setPassword(passwordEncoder.encode(request.getPassword()));
+            userRepository.save(user);
+            return "Password Reset successfully";
+        }else {
+            return "Failed to update password";
+        }
+    }
+
     private void sendValidationEmail(User user) throws MessagingException {
         var newToken = generateAndSaveActivationToken(user);
         emailService.sendEmail(
@@ -122,7 +147,7 @@ public class AuthenticationServiceImp implements AuthenticationService{
                 .user(user)
                 .build();
         tokenRepository.save(token);
-
+        System.out.println("Generated code for the user : "+token);
         return generatedToken;
     }
 
