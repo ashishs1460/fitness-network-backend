@@ -99,6 +99,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
+		<finalName>fitness-network</finalName>
 	</build>
 
 </project>

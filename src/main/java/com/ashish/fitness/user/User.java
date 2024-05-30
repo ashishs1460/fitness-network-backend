@@ -1,6 +1,8 @@
 package com.ashish.fitness.user;
 
 
+import com.ashish.fitness.equipment.Equipment;
+import com.ashish.fitness.history.EquipmentTransactionHistory;
 import com.ashish.fitness.role.Role;
 import jakarta.persistence.*;
 import lombok.*;
@@ -28,7 +30,7 @@ import java.util.stream.Collectors;
 @EntityListeners(AuditingEntityListener.class)
 public class User implements UserDetails, Principal {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String firstName;
     private String lastName;
@@ -46,6 +48,11 @@ public class User implements UserDetails, Principal {
     private LocalDateTime lastModifiedDate;
     @ManyToMany(fetch =FetchType.EAGER)
     private List<Role> roles;
+    @OneToMany(mappedBy = "owner")
+    private List<Equipment> equipments;
+
+    @OneToMany(mappedBy = "user")
+    private List<EquipmentTransactionHistory> histories;
 
 
     @Override
@@ -91,7 +98,7 @@ public class User implements UserDetails, Principal {
         return enabled;
     }
 
-    private String fullName(){
+    public String fullName(){
         return  firstName+" "+lastName;
     }
 }
