@@ -14,7 +14,7 @@ public class EquipmentResponse {
     private String isbn;
     private String description;
     private String owner;
-    private byte[] image;
+    private String image;
     private double rate;
     private boolean archived;
     private boolean sharable;

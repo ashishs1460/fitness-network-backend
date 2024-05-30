@@ -27,7 +27,7 @@ public class EquipmentMapper {
                 .archived(equipment.isArchived())
                 .sharable(equipment.isSharable())
                 .owner(equipment.getOwner().fullName())
-                .image(FileUtils.readFileFromLocation(equipment.getImage()))
+                .image(equipment.getImage())
                 .build();
     }
 

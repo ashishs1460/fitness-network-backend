@@ -25,6 +25,7 @@ public class Equipment extends BaseEntity {
     private String isbn;
     private String description;
     private String image;
+    private String publicId;
     private boolean archived;
     private boolean sharable;
     @ManyToOne

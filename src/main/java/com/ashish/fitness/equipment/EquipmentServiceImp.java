@@ -1,5 +1,6 @@
 package com.ashish.fitness.equipment;
 
+import com.ashish.fitness.cloudinary.CloudinaryService;
 import com.ashish.fitness.common.PageResponse;
 import com.ashish.fitness.exception.OperationNotPermittedException;
 import com.ashish.fitness.file.FileStorageService;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 @Service
@@ -29,6 +31,8 @@ public class EquipmentServiceImp implements EquipmentService{
     private EquipmentTransactionHistoryRepository historyRepository;
     @Autowired
     private FileStorageService fileStorageService;
+    @Autowired
+    private CloudinaryService cloudinaryService;
     @Override
     public Integer save(EquipmentRequest request, Authentication connectedUser) {
         User user = ((User) connectedUser.getPrincipal());
@@ -211,8 +215,16 @@ public class EquipmentServiceImp implements EquipmentService{
         Equipment equipment = equipmentRepository.findById(equipmentId)
                 .orElseThrow(()-> new EntityNotFoundException("No equipment found with Id :: "+equipmentId));
         User user = ((User) connectedUser.getPrincipal());
-        var equipmentImage = fileStorageService.saveFile(file,user.getId());
-        equipment.setImage(equipmentImage);
+        if(equipment.getPublicId() !=null){
+            cloudinaryService.delete(equipment.getPublicId());
+        }
+        String folder = "Equipment_images";
+        Map data =  cloudinaryService.upload(file,folder);
+        String imageUrl = (String) data.get("secure_url");
+        String publicId = (String) data.get("public_id");
+//        var equipmentImage = fileStorageService.saveFile(file,user.getId());
+        equipment.setImage(imageUrl);
+        equipment.setPublicId(publicId);
         equipmentRepository.save(equipment);
     }
 }

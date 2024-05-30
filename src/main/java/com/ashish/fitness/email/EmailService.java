@@ -48,6 +48,7 @@ public class EmailService {
         return "<p>Dear " + username + ",</p>"
                 + "<p>Thank you for registering. Please click the link below to activate your account:</p>"
                 + "<a href=\"" + confirmationUrl + "?token=" + activationCode + "\">Activate Account</a>"
+                + "<h1>Your activation code is: " + activationCode + "</h1>"
                 + "<p>If you did not request this, please ignore this email.</p>"
                 + "<p>Best regards,<br/>Your Company</p>";
     }
