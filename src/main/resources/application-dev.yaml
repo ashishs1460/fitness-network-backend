@@ -33,7 +33,7 @@ application:
         expiration: 604800000 # 7 days
   mailing:
     frontend:
-      activation-url: http://localhost:4200/activate-account
+      activation-url: https://fitness-social-service.vercel.app/activate-account
   file:
     uploads:
       photos-output-path: uploads
