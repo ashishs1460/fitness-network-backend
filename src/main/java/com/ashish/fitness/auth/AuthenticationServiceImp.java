@@ -130,7 +130,7 @@ public class AuthenticationServiceImp implements AuthenticationService{
         emailService.sendEmail(
                 user.getEmail(),
                 user.fullName(),
-                EmailTemplateName.valueOf("activate_account"),
+                EmailTemplateName.ACTIVATE_ACCOUNT,
                 activationUrl,
                 newToken,
                 "Account activation"
